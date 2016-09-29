@@ -7,15 +7,16 @@
 	<title>Scrapbook</title>
 
 	<!-- Bootstrap CSS -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-	<!-- <link rel="stylesheet" href="css/bootstrap-material-design.css"> -->
-	<!-- <link rel="stylesheet" href="css/ripples.css"> -->
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">	
+<!-- 	<link rel="stylesheet" href="css/bootstrap-material-design.css">
+	<link rel="stylesheet" href="css/ripples.css"> -->
 	<link rel="stylesheet" href="css/fileinput.css">
 	
 	<link rel="stylesheet" href="css/style.css">
 	
 	<script>window.$ = window.jQuery = require('./js/jquery.js');</script>
-	<script src="js/bootstrap.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	<script src="js/material.js"></script>
 	<script src="js/ripples.js"></script>
 	<script src="src/randerer.js"></script>
@@ -32,16 +33,15 @@
 <body>
 
 	
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+	<nav class="navbar navbar-inverse navbar-fixed-top top-header">
 		<div class="container">
-			<a class="navbar-brand" href="#">Scrapbook</a>
-
+			<h3>Scrapbook</h3>
 		</div>
 	</nav>
 	
-	<div class="container">
+	<div class="container-fluid">
 		
-		<div class="row">
+		<div>
 			
 			<!--Folder Selection -->
 			<div class="input-group file-caption-main col-lg-12">
@@ -55,15 +55,14 @@
 			</div>
 
 			<!-- Image Staging area -->
-			<div class="input-group col-lg-8">
+			<!-- <div class="input-group col-lg-8">
 					<h1 class="page-header">Thumbnail Gallery</h1>
-					<div class="input-group-btn">
-					<button  class="btn btn-primary classify">Classify</button>
+					<div class="input-group-btn">					
 					</div>
-			</div>
+			</div> -->
 
 			<div class="col-lg-12">
-				<div class ="stagearea"> </div>
+				<div class ="stagearea row" style="margin-top: 20px"> </div>
 			</div>
 
 		</div>
@@ -74,7 +73,9 @@
 		<nav class="navbar navbar-inverse navbar-fixed-bottom">
 			<div class="container-fluid">
 				<a class="navbar-brand" href="#">Scrapbook</a>
-
+				<div class="pull-right">
+					<button  class="btn btn-primary classify">Classify</button>
+				</div>
 			</div>
 		</nav>
 	</footer>
@@ -91,5 +92,16 @@
 
 </script>
 
+
+<script id="classified" type="text/x-handlebars-template">
+	{{#each this}}
+	<div class='panel panel-primary col-lg-3 album'>
+		<div class='panel-heading'>
+			<span class="title">{{@key}}</span>
+		</div>
+	</div>
+	{{/each}}
+
+</script>
 
 </html>

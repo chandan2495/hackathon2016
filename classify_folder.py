@@ -53,7 +53,7 @@ def classify_folder(dirpath):
 					os.makedirs(album_superclass_map[category])
 				os.rename(image,album_superclass_map[category]+"//"+image)
 				# creating db data
-				image_dict['image'] = dirpath + '\\' + image
+				image_dict['image'] = dirpath + '\\' + album_superclass_map[category] + '\\' + image
 				image_dict['labels'] = out_label_preds
 				image_dict['top_pred'] = top_pred
 				images.append(image_dict)
@@ -80,4 +80,5 @@ def classify(dir):
 	#classify_folder('G:\Hackathon\deep-learning-models\images\\awsome')
 
 if __name__ == '__main__':
-	classify_folder('G:\Hackathon\deep-learning-models\images\\awsome')	
+	classify('C:\\htest')
+	#classify_folder('G:\Hackathon\deep-learning-models\images\\awsome')	

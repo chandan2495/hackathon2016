@@ -1,5 +1,6 @@
 import numpy as np
 import json
+import operator
 
 from keras.utils.data_utils import get_file
 from keras import backend as K
@@ -51,12 +52,14 @@ def decode_predictions(preds):
     # new_preds = new_preds[::-1]
     preds_dict = { idx: prob for idx,prob in enumerate(preds)}
     out_label_probs = []
-    for idx,prob in preds_dict.items():
-        if prob>0.5:
-            label_prob = dict()
-            label_prob['label'] = CLASS_INDEX[str(idx)]
-            label_prob['prob'] = prob
-            out_label_probs.append(label_prob)
+    sorted_preds_dict = sorted(preds_dict.items(), key=operator.itemgetter(1))
+    sorted_preds_dict = sorted_preds_dict[::-1]
+    sorted_preds_dict = sorted_preds_dict[:11]
+    for pred in sorted_preds_dict:
+        label_prob = dict()
+        label_prob['label'] = CLASS_INDEX[str(pred[0])]
+        label_prob['prob'] = pred[1]
+        out_label_probs.append(label_prob)
     # results = []
     # for i in indices:
     #     results.append(CLASS_INDEX[str(i)])

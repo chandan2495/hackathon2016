@@ -1,0 +1,61 @@
+.navbar {
+	height: 30px;
+	text-align: center;
+}
+.image_thumbnail {
+    width: 140px;
+    height: 120px;
+    padding: 10px;
+}
+body {
+        padding-top: 100px;
+    padding-bottom: 20px;
+}
+.thumbnail {
+    display: block;
+    padding: 4px;
+    margin-bottom: 20px;
+    line-height: 1.42857143;
+    background-color: transparent;
+    border: 0px solid #ddd;
+    -webkit-transition: border .2s ease-in-out;
+    -o-transition: border .2s ease-in-out;
+    transition: border .2s ease-in-out;
+}
+.top-header {
+    text-align: center;
+    color: white;
+}
+.album .panel {
+    height: 233px;
+    box-shadow:1px 2px 3px 2px #c5c3c3;
+    background: transparent;
+    border-radius: 5px;
+}
+.album img{
+    width: 91.2%;
+    min-height: 233px;
+    position: absolute;
+    z-index: -1;
+    transition: color .2s ease-in-out,opacity .2s ease-in-out;
+    border-radius: 5px;
+}
+.album .title {
+    position: absolute;
+    left: 30px;
+    top: 15px;
+    font-size: 19px;
+    font-weight: bold;
+    color: white;
+}
+.album .panel-body {
+    padding: 0;
+    background-color: rgba(0, 0, 0, 0.33);
+    z-index: 5;
+    height: 100%;
+    transition: 0.2s linear all;
+    border-radius: 5px;
+}
+.album .panel-body:hover {
+    background-color: rgba(0, 0, 0, 0.5);
+}

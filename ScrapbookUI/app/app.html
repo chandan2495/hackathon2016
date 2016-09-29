@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Scrapbook</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">    
+    <link href="css/roboto.min.css" rel="stylesheet">
+    <link href="css/material.min.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">    
+    <link rel="stylesheet" href="css/fileinput.css">
+    <link href="css/style.css" rel="stylesheet">
+    
+    <script src="helpers/context_menu.js"></script>
+    <script src="helpers/external_links.js"></script>
+    <script src="app.js"></script>    
+    <script src="js/bootstrap.js"></script>
+    <script src="js/material.js"></script>
+    <script src="js/ripples.js"></script>
+    <script>
+        $(document).ready(function() {
+            // This command is used to initialize some elements and make them work properly
+            $.material.init();
+        });
+    </script>
+</head>
+<body>
+
+    
+    <nav class="navbar navbar-inverse navbar-fixed-top top-header">
+        <div class="container">
+            <h3>Scrapbook</h3>
+        </div>
+    </nav>
+    
+    <div class="container-fluid">
+        
+        <div>
+            
+            <!--Folder Selection -->
+            <div class="input-group file-caption-main col-lg-12">
+                <div tabindex="500" class="form-control file-caption  kv-fileinput-caption">
+                    <div class="file-caption-name"></div>
+                </div>
+
+                <div class="input-group-btn">
+                    <div tabindex="500" class="btn btn-primary btn-file"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;  <span class="hidden-xs">Select Folder...</span><input id="input-folder-1" type="file" class="" webkitdirectory=""></div>
+                </div>
+            </div>
+
+            <!-- Image Staging area -->
+            <!-- <div class="input-group col-lg-8">
+                    <h1 class="page-header">Thumbnail Gallery</h1>
+                    <div class="input-group-btn">                   
+                    </div>
+            </div> -->
+
+            <div>
+                <div class ="stagearea row" style="margin-top: 20px"> </div>
+            </div>
+
+        </div>
+    </div>
+    
+
+    <footer>
+        <nav class="navbar navbar-inverse navbar-fixed-bottom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Scrapbook</a>
+                <div class="pull-right">
+                    <button  class="btn btn-primary classify">Classify</button>
+                </div>
+            </div>
+        </nav>
+    </footer>
+</body>
+<script id="imagestaging" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="col-lg-3 col-md-4">
+        <a class="thumbnail" href="#">
+            <img class="img-responsive" src="{{this.imageFullPath}}" alt="" height="200" width="200">
+        </a>
+        <div style="text-align: center;" class="imagename">{{this.imageName}}</div>
+    </div>
+    {{/each}}
+
+</script>
+
+
+<script id="classified" type="text/x-handlebars-template">
+    {{#each this}}
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 album">
+        <div class='panel panel-primary'>
+            <div class='panel-body'>
+            <img src="{{this.0.image}}" alt="">       
+                <span class="title">{{@key}}</span>
+            </div>
+        </div>
+    </div>        
+    {{/each}}
+
+</script>
+
+</html>
