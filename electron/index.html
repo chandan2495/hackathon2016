@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Scrapbook</title>
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<!-- <link rel="stylesheet" href="css/bootstrap-material-design.css"> -->
+	<!-- <link rel="stylesheet" href="css/ripples.css"> -->
+	<link rel="stylesheet" href="css/fileinput.css">
+	
+	<link rel="stylesheet" href="css/style.css">
+	
+	<script>window.$ = window.jQuery = require('./js/jquery.js');</script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/material.js"></script>
+	<script src="js/ripples.js"></script>
+	<script src="src/randerer.js"></script>
+	<script>
+		$(function(){
+			$.material.init();
+		});
+		
+
+	</script>
+
+</head>
+
+<body>
+
+	
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<a class="navbar-brand" href="#">Scrapbook</a>
+
+		</div>
+	</nav>
+	
+	<div class="container">
+		
+		<div class="row">
+			
+			<!--Folder Selection -->
+			<div class="input-group file-caption-main col-lg-12">
+				<div tabindex="500" class="form-control file-caption  kv-fileinput-caption">
+					<div class="file-caption-name"></div>
+				</div>
+
+				<div class="input-group-btn">
+					<div tabindex="500" class="btn btn-primary btn-file"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;  <span class="hidden-xs">Select Folder...</span><input id="input-folder-1" type="file" class="" webkitdirectory=""></div>
+				</div>
+			</div>
+
+			<!-- Image Staging area -->
+			<div class="input-group col-lg-8">
+					<h1 class="page-header">Thumbnail Gallery</h1>
+					<div class="input-group-btn">
+					<button  class="btn btn-primary classify">Classify</button>
+					</div>
+			</div>
+
+			<div class="col-lg-12">
+				<div class ="stagearea"> </div>
+			</div>
+
+		</div>
+	</div>
+	
+
+	<footer>
+		<nav class="navbar navbar-inverse navbar-fixed-bottom">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">Scrapbook</a>
+
+			</div>
+		</nav>
+	</footer>
+</body>
+<script id="imagestaging" type="text/x-handlebars-template">
+	{{#each this}}
+	<div class="col-lg-3 col-md-4">
+		<a class="thumbnail" href="#">
+			<img class="img-responsive" src="{{this.imageFullPath}}" alt="" height="200" width="200">
+		</a>
+		<div style="text-align: center;" class="imagename">{{this.imageName}}</div>
+	</div>
+	{{/each}}
+
+</script>
+
+
+</html>
