@@ -9,14 +9,14 @@ image_extensions = ["jpg", "jpeg", "png", "bmp"]
 album_superclass_map = {
 	'animal' : 'Animal',
 	'person' : 'Person',
-	'animal' : 'Animal',
-	'animal' : 'Animal',
-	'animal' : 'Animal',
-	'animal' : 'Animal',
-	'animal' : 'Animal',
-	'animal' : 'Animal',
-	'animal' : 'Animal',
-	'animal' : 'Animal',
+	'location' : 'Places',
+	'vehicle' : 'Vehicles',
+	'sport' : 'Sports',
+	'geological_formation' : 'Outdoor',
+	'musical_instrument' : 'Musical Instruments',
+	'plant' : 'Nature',
+	'electronic_equipment' : 'Electronic Gadgets',
+	'misc' : 'Miscellaneous',
 }
 
 def classify_folder(dirpath):

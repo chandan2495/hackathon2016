@@ -1,0 +1,14 @@
+{
+  "name": "scrapbook",
+  "version": "1.0.0",
+  "description": "An app to classify photos",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+  	"express": "latest"
+  	},
+  "author": "deep_learners",
+  "license": "ISC"
+}
