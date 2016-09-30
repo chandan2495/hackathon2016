@@ -1,6 +1,7 @@
 from test_imagenet import classify_image
 import os
 import sys
+import shutil
 
 CURRENT_FOLDER = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(CURRENT_FOLDER + '/Scrapbook/python_scripts')
@@ -33,8 +34,25 @@ def create_db():
 	except Exception as e:
 		print e
 
-def classify_folder(dirpath):
+def prepare_for_test(dirpath):
+	print dirpath
+	try:
+		if os.path.exists(dirpath + '\\Animal'):
+			shutil.rmtree('Animal')
+		if os.path.exists(dirpath + '\\Miscellaneous'):
+			shutil.rmtree('Miscellaneous')
+		if os.path.exists(dirpath + '\\Places'):
+			shutil.rmtree('Places')		
+		for image in os.listdir(dirpath + "\\all"):
+			print image, dirpath + "//"+image
+			os.rename("c:\\htest\\all\\"+image,"c:\\htest\\"+image)
+	except Exception as e:
+		print e
+	
+
+def classify_folder(dirpath):	
 	os.chdir(dirpath)
+	#prepare_for_test(os.getcwd())
 	images = []	
 	flag=0
 	for image in os.listdir(dirpath):		
@@ -66,8 +84,11 @@ def classify_folder(dirpath):
 
 
 def save_data_to_db(top_pred, out_label_preds, images, dirpath):
-	# insert data to albums table (path, album_name) and images table	
-	return saveDb.insertToDb(dirpath.split('\\')[-1], dirpath, images, PATH_TO_DB)
+	# insert data to albums table (path, album_name) and images table
+	album_no = saveDb.checkExistence(dirpath)
+	if album_no == -1:
+		return saveDb.insertToDb(dirpath.split('\\')[-1], dirpath, images, PATH_TO_DB)
+	return album_no
 
 def classify(dir):
 	create_db()
@@ -79,6 +100,12 @@ def classify(dir):
 		return {}
 	#classify_folder('G:\Hackathon\deep-learning-models\images\\awsome')
 
+def getImagePreds(imagePath):
+	print imagePath
+	preds = saveDb.getImagePreds(imagePath)
+	return preds
+
 if __name__ == '__main__':
-	classify('C:\\htest')
+	# classify('C:\\htest')
+	getImagePreds('C:\htest2\Miscellaneous\8.jpg')
 	#classify_folder('G:\Hackathon\deep-learning-models\images\\awsome')	

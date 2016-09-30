@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Scrapbook</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">    
+    <link href="css/roboto.min.css" rel="stylesheet">
+    <link href="css/material.min.css" rel="stylesheet">
+    <link href="css/ripples.min.css" rel="stylesheet">    
+    <link rel="stylesheet" href="css/fileinput.css">
+    <link href="css/style.css" rel="stylesheet">
+    
+    <script src="helpers/context_menu.js"></script>
+    <script src="helpers/external_links.js"></script>
+    <script src="app.js"></script>    
+    <script src="js/bootstrap.js"></script>
+    <script src="js/material.js"></script>
+    <script src="js/ripples.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="js/angular.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // This command is used to initialize some elements and make them work properly
+            $.material.init();
+        });
+    </script>
+</head>
+<body data-ng-app="myApp" data-ng-controller="maincontroller">
+
+<div>
+    <nav class="navbar navbar-inverse navbar-fixed-top top-header">
+        <div class="container">
+            <h3>Scrapbook</h3>
+        </div>
+    </nav>
+    
+    <div class="container-fluid">
+        
+        <div>
+            
+            <!--Folder Selection -->
+            <div class="input-group file-caption-main col-lg-12" data-ng-hide="(inputImages&&inputImages.length>0)||(categories&&categories.length>0)">
+                <div tabindex="500" class="form-control file-caption  kv-fileinput-caption">
+                    <div class="file-caption-name"></div>
+                </div>
+
+                <div class="input-group-btn">
+                    <div tabindex="500" class="btn btn-primary btn-file"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;  <span class="hidden-xs">Select Folder...</span><input id="input-folder-1" type="file" class="" webkitdirectory=""></div>
+                </div>
+            </div>
+            <div class="breadcrumb1 row noLftRghtMargin" data-ng-show="(inputImages&&inputImages.length>0)||(categories&&categories.length>0)">
+               <ul style="padding-left: 0" class="pull-left">
+                   <li class="btn btn-info btn-sm">All Albumns</li>
+                   <li class="btn btn-info btn-sm" data-ng-show="currentBreadcrumb==='album'||currentBreadcrumb==='category'" data-ng-click="setInputImages(currentAlbum,true)">{{currentAlbum}}</li>
+                   <li class="btn btn-info btn-sm" data-ng-show="currentBreadcrumb==='category'">{{currentCategory}}</li>
+               </ul>
+               <div class="pull-right" style="margin-top: -20px;">
+                   <button  class="btn btn-primary classify" data-ng-click="classify()">Classify</button>
+               </div>
+            </div>
+            <!-- Image Staging area -->
+            <!-- <div class="input-group col-lg-8">
+                    <h1 class="page-header">Thumbnail Gallery</h1>
+                    <div class="input-group-btn">                   
+                    </div>
+            </div> -->
+
+            <div>
+                <div class ="stagearea row" style="margin-top: 20px" data-ng-class="{'fullscreen': isFullScreen}"> 
+                    <div class="album-categories" data-ng-show="stagearea ==='albumsCategories'">                         
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2 category" data-ng-repeat="category in categories">                            
+                            <div class='panel panel-primary' data-ng-click="setInputImages(category.category,true)">
+                                <div class='panel-body'>
+                                <img data-ng-src="{{category[0].image}}" alt="">       
+                                    <span class="title">{{category.category}}</span>
+                                </div>
+                            </div>
+                        </div>                         
+                    </div>
+
+                    <div class="album-parent" data-ng-show="stagearea ==='inputImages'">
+                        <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2 album" data-ng-repeat="image in inputImages" data-ng-init="image.isFullScreen=false">
+                            <div class='panel panel-primary' data-ng-click="makeImageFullscreen(); image.isFullScreen=true;$parent.isFullScreen=true;" data-ng-class="{'fullscreen': isFullScreen}">                                
+                                <div class='panel-body' data-ng-class="{'image-fullscreen': image.isFullScreen}">
+                                    <img data-ng-src="{{image.image}}" alt="" height="200" width="200" >
+                                    <div class="image-info" data-ng-show="image.isFullScreen">
+                                        <div class="pull-right" style="margin-right: 5px;">
+                                              <button class="btn btn-warning" data-ng-click="image.isFullScreen=false;$parent.isFullScreen=false;$event.preventDefault();$event.stopImmediatePropagation()">Close</button>
+                                          </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="text-align: center;display: none;" class="imagename">{{image.imageName}}</div>
+                        </div>
+                    </div> 
+
+                    
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
