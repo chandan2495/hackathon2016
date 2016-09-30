@@ -105,7 +105,11 @@ def getImagePreds(imagePath):
 	preds = saveDb.getImagePreds(imagePath)
 	return preds
 
+def getSearchResults(tag):
+	results = saveDb.searchImage(tag)
+	return results
+
 if __name__ == '__main__':
-	# classify('C:\\htest')
-	getImagePreds('C:\htest2\Miscellaneous\8.jpg')
+	classify('G:\\TestData')
+	#getImagePreds('C:\htest2\Miscellaneous\8.jpg')
 	#classify_folder('G:\Hackathon\deep-learning-models\images\\awsome')	

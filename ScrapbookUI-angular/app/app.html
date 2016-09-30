@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8">
     <title>Scrapbook</title>
+    <link href="https://fonts.googleapis.com/css?family=Courgette|Open+Sans" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">    
     <link href="css/roboto.min.css" rel="stylesheet">
     <link href="css/material.min.css" rel="stylesheet">
@@ -18,23 +19,31 @@
     <script src="js/ripples.js"></script>
     <script src="js/bootstrap.js"></script>
     <script type="text/javascript" src="js/angular.min.js"></script>
+    <script src="js/highcharts.js"></script>
     <script>
         $(document).ready(function() {
             // This command is used to initialize some elements and make them work properly
-            $.material.init();
+            $.material.init();            
         });
     </script>
 </head>
 <body data-ng-app="myApp" data-ng-controller="maincontroller">
 
 <div>
-    <nav class="navbar navbar-inverse navbar-fixed-top top-header">
+    <nav class="navbar navbar-warning navbar-fixed-top top-header">
         <div class="container">
-            <h3>Scrapbook</h3>
+            <img src="scrapbook-icon.png">
+            <span>Scrapbook</span>
         </div>
     </nav>
-    
-    <div class="container-fluid">
+    <div class="spinner" data-ng-show="isLoading">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+      <div class="rect5"></div>
+    </div>
+    <div class="container-fluid" data-ng-class="{'background-mask' : isFullScreen}" data-ng-hide="isLoading">
         
         <div>
             
@@ -45,17 +54,17 @@
                 </div>
 
                 <div class="input-group-btn">
-                    <div tabindex="500" class="btn btn-primary btn-file"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;  <span class="hidden-xs">Select Folder...</span><input id="input-folder-1" type="file" class="" webkitdirectory=""></div>
+                    <div tabindex="500" class="btn btn-info btn-file"><i class="glyphicon glyphicon-folder-open"></i>&nbsp;  <span class="hidden-xs">Select Folder...</span><input id="input-folder-1" type="file" class="" webkitdirectory=""></div>
                 </div>
             </div>
-            <div class="breadcrumb1 row noLftRghtMargin" data-ng-show="(inputImages&&inputImages.length>0)||(categories&&categories.length>0)">
+            <div class="breadcrumb1 row noLftRghtMargin" data-ng-show="((inputImages&&inputImages.length>0)||(categories&&categories.length>0))&&!isFullScreen">
                <ul style="padding-left: 0" class="pull-left">
-                   <li class="btn btn-info btn-sm">All Albumns</li>
-                   <li class="btn btn-info btn-sm" data-ng-show="currentBreadcrumb==='album'||currentBreadcrumb==='category'" data-ng-click="setInputImages(currentAlbum,true)">{{currentAlbum}}</li>
-                   <li class="btn btn-info btn-sm" data-ng-show="currentBreadcrumb==='category'">{{currentCategory}}</li>
+                   <li class="btn btn-info btn-md">All Albumns</li>
+                   <li class="btn btn-info btn-md" data-ng-show="currentBreadcrumb==='album'||currentBreadcrumb==='category'" data-ng-click="setInputImages(currentAlbum,true)">{{currentAlbum}}</li>
+                   <li class="btn btn-info btn-md" data-ng-show="currentBreadcrumb==='category'" data-ng-click="stagearea = 'albumsCategories'">Categories</li>
                </ul>
                <div class="pull-right" style="margin-top: -20px;">
-                   <button  class="btn btn-primary classify" data-ng-click="classify()">Classify</button>
+                   <button  class="btn btn-info classify" data-ng-click="classify()">Classify</button>
                </div>
             </div>
             <!-- Image Staging area -->
@@ -69,10 +78,10 @@
                 <div class ="stagearea row" style="margin-top: 20px" data-ng-class="{'fullscreen': isFullScreen}"> 
                     <div class="album-categories" data-ng-show="stagearea ==='albumsCategories'">                         
                         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2 category" data-ng-repeat="category in categories">                            
-                            <div class='panel panel-primary' data-ng-click="setInputImages(category.category,true)">
+                            <div class='panel panel-primary' data-ng-click="setInputImages(category.category)">
                                 <div class='panel-body'>
                                 <img data-ng-src="{{category[0].image}}" alt="">       
-                                    <span class="title">{{category.category}}</span>
+                                    <span class="title">{{album_superclass_map[category.category]}}</span>
                                 </div>
                             </div>
                         </div>                         
@@ -80,23 +89,54 @@
 
                     <div class="album-parent" data-ng-show="stagearea ==='inputImages'">
                         <div class="col-xs-3 col-sm-3 col-md-3 col-lg-2 album" data-ng-repeat="image in inputImages" data-ng-init="image.isFullScreen=false">
-                            <div class='panel panel-primary' data-ng-click="makeImageFullscreen(); image.isFullScreen=true;$parent.isFullScreen=true;" data-ng-class="{'fullscreen': isFullScreen}">                                
+                            <div class='panel panel-primary imageClickable'  data-ng-class="{'fullscreen': isFullScreen}" data-id="{{image.image}}" ng-click="makeImageFullscreen($event); image.isFullScreen=true; $parent.isFullScreen=true;">                                
                                 <div class='panel-body' data-ng-class="{'image-fullscreen': image.isFullScreen}">
                                     <img data-ng-src="{{image.image}}" alt="" height="200" width="200" >
+                                    <div class ="reportarea" data-ng-show="image.isFullScreen">     
+                                    </div> 
                                     <div class="image-info" data-ng-show="image.isFullScreen">
                                         <div class="pull-right" style="margin-right: 5px;">
                                               <button class="btn btn-warning" data-ng-click="image.isFullScreen=false;$parent.isFullScreen=false;$event.preventDefault();$event.stopImmediatePropagation()">Close</button>
                                           </div>
+                                           
                                     </div>
                                 </div>
                             </div>
                             <div style="text-align: center;display: none;" class="imagename">{{image.imageName}}</div>
                         </div>
-                    </div> 
+                    </div>
+                   <!--  <div class="" data-ng-repeat="image in inputImages">
+                                                    
+                                <div class='album-panel'>
+                                    <img class="albumImg" data-ng-src="{{image.image}}" alt="" height="200" width="200" data-ng-click="alert('hi')">
+                                  
+                                </div>
+                            <div style="text-align: center;display: none;" class="imagename">{{image.imageName}}</div>
+                        </div> -->
+                 <!--    <div class="album-parent" data-ng-show="stagearea ==='inputImages'">
+                        
+                    </div> -->
 
-                    
+                    <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                          <!-- Modal content-->
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal">&times;</button>
+                              <h4 class="modal-title">Modal Header</h4>
+                          </div>
+                          <div class="modal-body">
+                              <p>Some text in the modal.</p>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
 
                 </div>
+
             </div>
 
         </div>

@@ -37,6 +37,7 @@ app.on('ready', function () {
         height: 600
     });
     mainWindow.maximize();
+    // mainWindow.setMenu(null);
     mainWindow.loadURL('file://' + __dirname + '/app.html');
 
     // if (env.name === 'development') {

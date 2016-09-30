@@ -67,6 +67,7 @@ $(function(){
 			classified[inputDir] = $.extend(true,classified[inputDir],categories);			
 			localStorage.setItem('classified',JSON.stringify(classified));
 			albumHtml = template(categories);
+			populateBreadCrumb(inputDir+'\\Places',inputDir);
 			$(".stagearea").empty().html(albumHtml);
 		});
 	});
@@ -100,6 +101,32 @@ $(function(){
 		}
 		
 	});
+	var populateBreadCrumb = function(dirPath,basePath) {
+		var dirComponents = dirPath.split("\\");
+		var basePathComponents = basePath.split("\\");
+		console.log(dirComponents[dirComponents.length-1]);
+		console.log(basePathComponents[basePathComponents.length-1]);
+		var breadcrumb = $('<div/>', {
+    	'class': 'btn-group btn-breadcrumb',    	
+		}).appendTo('body');
+		var breadcrumbHome = $("<a/>",{
+			'text': basePathComponents[basePathComponents.length-1],
+    		'data-path':basePath    	
+		}).appendTo(breadcrumb);
+		var breadcrumbLnk = $("<a/>",{
+			'class' : 'btn btn-primary',
+			'text' :  dirComponents[dirComponents.length-1],
+			'data-path' : dirComponents[dirComponents.length-1]
+		}).appendTo(breadcrumb);
+		// <div class="btn-group btn-breadcrumb">
+  //           <a href="#" class="btn btn-primary"><i class="glyphicon glyphicon-home"></i></a>
+  //           <a href="#" class="btn btn-primary">Snippets</a>
+  //           <a href="#" class="btn btn-primary">Breadcrumbs</a>
+  //           <a href="#" class="btn btn-primary">Primary</a>
+  //       </div>
+
+	}
+
 	var createChartContainer = function(chartId,chartContainer) {
 
 	var chartCols = $('<div/>', {

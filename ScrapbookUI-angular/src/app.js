@@ -34,8 +34,22 @@ document.addEventListener('DOMContentLoaded', function () {
 var fs = require('fs');
 
 $(function(){
+
 	angular.module("myApp",[]).controller('maincontroller',['$scope','$timeout',function($scope,$timeout){
 	var classified = {};
+	$scope.album_superclass_map = {
+		'animal' : 'Animal',
+		'person' : 'Person',
+		'location' : 'Places',
+		'vehicle' : 'Vehicles',
+		'sport' : 'Sports',
+		'geological_formation' : 'Outdoors',
+		'musical_instrument' : 'Musical Instruments',
+		'plant' : 'Nature',
+		'electronic_equipment' : 'Electronic Gadgets',
+		'misc' : 'Miscellaneous',
+	}
+	$scope.isLoading = false;
 	$scope.inputImages = [];
 	$scope.categories = [];
 	var restUrl = "http://172.16.65.40:3000/";
@@ -43,6 +57,7 @@ $(function(){
 	$('input[type=file]').change(function () {
 		$scope.imagePath=this.files[0].path;
 		var inputImages = [];
+		$scope.isLoading=true;
 		$('.file-caption-name').empty().text($scope.imagePath).data("filepath",$scope.imagePath);
 		traverseFileSystem($scope.imagePath,inputImages);
 		$timeout(function() {
@@ -51,14 +66,33 @@ $(function(){
 			$scope.currentBreadcrumb='album';
 			var temp = $scope.imagePath.split('\\');
 			$scope.currentAlbum = temp[temp.length-1]
+			$scope.isLoading=false;
 		});
 		
 	});
-
+	$(".imageClickable").click(function(){
+			console.log($(this).attr('data-id'));
+	});
 	$(".album-panel").off("click").on("click",function(evt) {
 		alert('hi');
 	});
-
+	$scope.makeImageFullscreen = function(e) {
+           
+			var imagePath=$(e.toElement).find('img').attr('src');
+			var reportArea = $(e.toElement).find('.reportarea');
+			console.log(imagePath);
+			imagePath=imagePath.replace(/\/\//g,'\\')
+			var serverUrl = restUrl+"getImagePreds?imagePath="+imagePath;			
+			doGet(serverUrl,function(data){
+			$timeout(function() {				
+				var categories = data;
+				categories = (categories||"").replace(/\\/g,'')
+				categories = (categories||"").substr(1,categories.length-2);
+				categories = JSON.parse(categories||[])
+				$scope.onReport(reportArea,categories||[]);
+				});
+			});
+        };
 	$scope.classify = function(evt) {
 		
 		// var inputImgArr = [];
@@ -67,8 +101,10 @@ $(function(){
 		var albumHtml = "";		
 		var inputDir = $(".file-caption-name").data("filepath");
 		var serverUrl = restUrl+"classifier?dirname="+inputDir;
-		doGet(serverUrl,function(data){
-			$timeout(function() {				
+		$scope.isLoading = true;
+		doGet(serverUrl,function(data){			
+			$timeout(function() {		
+				$scope.isLoading=false;		
 				var categories = data.replace(/\\/g,'/');
 				
 				var categories = JSON.parse(categories);	
@@ -83,9 +119,7 @@ $(function(){
 					var tempCategory = categories[albumsCategories[i]];
 					console.log('albumsCategories[i]'+albumsCategories[i]);
 					tempCategory['category'] = albumsCategories[i];
-					console.log(tempCategory);
-					console.log('tempCategory[category]'+tempCategory['category']);
-					console.log('tempCategory[category].image'+tempCategory['image']);
+
 					$scope.categories.push(tempCategory);	
 					}
 				}
@@ -114,92 +148,85 @@ $(function(){
 			} else {
 				angular.forEach($scope.categories, function(value, index) {
 					if (value.category === category) {
-						$scope.inputImages = value.images;
+						$scope.inputImages = value;
 						return;
 					}
 				});
-				if ($scope.currentAlbum) {
-					$scope.currentCategory = category;
-					$scope.currentBreadcrumb='category';				
-				}
+				$scope.currentCategory = category;
+				$scope.currentBreadcrumb='category';								
 			}
 			$scope.stagearea = 'inputImages';
 		};
-		$scope.alert = function() {
-			$window.alert('hi');
+		$scope.alert = function(image) {
+			
+
 		};
-		$scope.makeImageFullscreen = function() {
-			alert("asdas");
-			// image.isFullScreen=true;
-			// $scope.isFullScreen=true;
-			// e.stopPreventDefault();
-			// e.stopImmediatePropagation();
-		};
+
+		$scope.changeToCategory = function() {
+
+		}
+		
 
 
 		//TODO: call REST API with the folder path. Expect JSON
 	};
 
 
-$scope.onReport = function() {	
-		var inputDir = $(".file-caption-name").data("filepath");
-		var serverUrl = restUrl+"classifier?dirname="+inputDir;
-		var categories = classified[inputDir];
+$scope.onReport = function(reportArea,categories) {			
 		var chartSeries = [];
-		for(var classKey in categories) {
-			var series = {};
-			var chartId = 'chart-'+classKey;
-			var chartContainer = 'chartPanel';
-			createChartContainer(chartId,chartContainer);
-			var folderImagesInfo = categories[classKey].images;
-			for(var i =0;i<folderImagesInfo.length;i++) {
-				var labels = folderImagesInfo[i].labels;
-				var chartSeries = [];
-				for(var j=0;j<labels.length;j++) {
-					var series = {};
-					series.name = labels[j].label[1];
-					series.y = labels[j].prob;
-					chartSeries.push(series);
-				}
-
-				doHighChart(chartId,'pie','something by something','??',chartSeries);				
-			}
-		}
-};
+		var chartId = 'chartCols_0';
+		// createChartContainer(chartId,"reportarea");
+		$(reportArea).empty();
+		$("<div/>", {
+			id : chartId		
+		}).appendTo(reportArea);
+		$(categories).each(function(index,category) {
+			var series = {};			
+			var chartContainer = 'chartPanel';							
+					series.name = category.label[1];
+					series.y = category.prob;;
+					chartSeries.push(series);								
+			});
+			doHighChart(chartId,'pie','Label Vs Probability','??',chartSeries);
+		
+	};
 	}]);
 });
 
 
-var createChartContainer = function(chartId,chartContainer) {
+// var createChartContainer = function(chartId,chartContainer) {
+// 	$(".reportarea").empty();
+// 	var chartCols = $('<div/>', {
+//     	id: 'chartCols_0',    
+// 	}).appendTo('.reportarea');
 
-	var chartCols = $('<div/>', {
-    	id: 'chartCols_'+chartId,    
-    	class: 'col-xs-3 col-sm-3 col-md-3 col-lg-3',
-	}).appendTo('.reportarea');
+// 	$('<div/>',{
+// 		id:chartId
+// 	}).appendTo(chartCols);
 
-	var chartPanel = $('<div/>', {
-    	//id: chartId,    
-    	class: 'panel panel-primary',
-	}).appendTo(chartCols);
-
-	var chartPanelBody = $('<div/>', { 
-    	class: 'panel-body chartPanel',
-	}).appendTo(chartPanel);
-
-	$('<div/>',{
-		id:chartId
-	}).appendTo(chartPanelBody);
-
-	};
+// 	};
 var doHighChart = function(chartId,chartType,chartTitle,chartSeriesName,chartData) {
 	// Build the chart
+
 	$('#'+chartId).highcharts({
 		chart: {
 			plotBackgroundColor: null,
 			plotBorderWidth: null,
 			plotShadow: false,
-			type: chartType
+			type: chartType,
+			renderTo: "reportarea", 
 		},
+		colors: ["#00cee6",
+										"#9b9bd7",
+										"#6EDA55",
+										"#fc7570",
+										"#fbb755",
+										"#218A8C",
+										"#ef597b",
+										"#7cef59",
+										"#599def",
+										"#ef9359",
+										"#ff6d31"],
 		title: {
 			text: chartTitle
 		},
@@ -268,4 +295,3 @@ var getExtension = function(filename) {
 	var i = filename.lastIndexOf('.');
 	return (i < 0) ? '' : filename.substr(i);
 };
-
